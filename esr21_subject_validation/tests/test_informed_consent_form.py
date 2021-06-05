@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from edc_base.utils import get_utcnow, relativedelta
-from edc_constants.constants import YES, MALE, FEMALE
+from edc_constants.constants import YES, MALE, FEMALE, OMANG
 
 from ..form_validators import InformedConsentFormValidator
 from .models import EligibilityConfirmation
@@ -27,6 +27,7 @@ class TestSubjectConsentForm(TestCase):
             'initials': 'TOT',
             'identity': '123425678',
             'confirm_identity': '123425678',
+            'identity_type': OMANG,
             'gender': FEMALE,
             'citizen': YES}
 
@@ -48,6 +49,24 @@ class TestSubjectConsentForm(TestCase):
 
     def test_consent_gender_identity_invalid(self):
         self.consent_options['gender'] = MALE
+
+        form_validator = InformedConsentFormValidator(
+            cleaned_data=self.consent_options)
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn('identity', form_validator._errors)
+
+    def test_consent_identity_numbers_invalid(self):
+        self.consent_options['identity'] = 'abcdgts'
+        self.consent_options['confirm_identity'] = 'abcdgts'
+
+        form_validator = InformedConsentFormValidator(
+            cleaned_data=self.consent_options)
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn('identity', form_validator._errors)
+
+    def test_consent_identity_omang_numbers_invalid(self):
+        self.consent_options['identity'] = '123256'
+        self.consent_options['confirm_identity'] = '123256'
 
         form_validator = InformedConsentFormValidator(
             cleaned_data=self.consent_options)

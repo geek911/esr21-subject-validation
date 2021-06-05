@@ -1,7 +1,8 @@
+import re
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
 from edc_base.utils import age
-from edc_constants.constants import MALE, FEMALE
+from edc_constants.constants import MALE, FEMALE, OMANG
 from edc_form_validators import FormValidator
 
 
@@ -18,25 +19,42 @@ class InformedConsentFormValidator(FormValidator):
         super().clean()
 
         self.validate_dob()
-        self.validate_identity_gender()
 
-    def validate_identity_gender(self):
+        self.validate_identity_number(cleaned_data=self.cleaned_data)
 
-        identity_key = self.cleaned_data.get('identity')[4]
-        gender = self.cleaned_data.get('gender')
-
-        if gender == MALE and identity_key != '1':
-            message = {'identity': 'The national identity number '
-                       f'does not match the pattern expected. Expected the '
-                       f'fifth digit as \'1\' for male, got \'{identity_key}\''}
-            self._errors.update(message)
-            raise ValidationError(message)
-        elif gender == FEMALE and identity_key != '2':
-            message = {'identity': 'The national identity number '
-                       f'does not match the pattern expected. Expected the '
-                       f'fifth digit as \'2\' for female, got \'{identity_key}\''}
-            self._errors.update(message)
-            raise ValidationError(message)
+    def validate_identity_number(self, cleaned_data=None):
+        identity = cleaned_data.get('identity')
+        if identity:
+            if not re.match('[0-9]+$', identity):
+                message = {'identity': 'Identity number must be digits.'}
+                self._errors.update(message)
+                raise ValidationError(message)
+            if cleaned_data.get('identity') != cleaned_data.get(
+                    'confirm_identity'):
+                msg = {'identity':
+                       '\'Identity\' must match \'confirm identity\'.'}
+                self._errors.update(msg)
+                raise ValidationError(msg)
+            if cleaned_data.get('identity_type') == OMANG:
+                if len(cleaned_data.get('identity')) != 9:
+                    msg = {'identity':
+                           'Country identity provided should contain 9 values.'
+                           ' Please correct.'}
+                    self._errors.update(msg)
+                    raise ValidationError(msg)
+                gender = cleaned_data.get('gender')
+                if gender == FEMALE and cleaned_data.get('identity')[4] != '2':
+                    msg = {'identity':
+                           'Participant gender is Female. Please correct '
+                           'identity number.'}
+                    self._errors.update(msg)
+                    raise ValidationError(msg)
+                elif gender == MALE and cleaned_data.get('identity')[4] != '1':
+                    msg = {'identity':
+                           'Participant is Male. Please correct identity '
+                           'number.'}
+                    self._errors.update(msg)
+                    raise ValidationError(msg)
 
     def validate_dob(self):
         try:
