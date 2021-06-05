@@ -14,7 +14,7 @@ class EligibilityConfirmationFormValidator(FormValidator):
     def clean(self):
 
         report_datetime = self.cleaned_data.get('report_datetime')
-        if (self.edc_protocol.study_open_datetime > report_datetime):
+        if (report_datetime and self.edc_protocol.study_open_datetime > report_datetime):
             message = {
                 'report_datetime': ('Date cannot be before study starts. Study opened on'
                                     f' {self.edc_protocol.study_open_datetime.date()}.')}

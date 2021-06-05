@@ -19,7 +19,21 @@ class TestEligibilityConfirmationForm(TestCase):
         except ValidationError as e:
             self.fail(f'ValidationError unexpectedly raised. Got{e}')
 
+    def test_eligibility_report_datetime_valid2(self):
+        cleaned_data = {
+            'report_datetime': None,
+            'age_in_years': 45,
+        }
+        form_validator = EligibilityConfirmationFormValidator(
+            cleaned_data=cleaned_data)
+        try:
+            form_validator.validate()
+        except ValidationError as e:
+            self.fail(f'ValidationError unexpectedly raised. Got{e}')
+
     def test_eligibility_report_datetime_invalid(self):
+        """ Assert that the report datetime raises an erroer if it is before
+         the study start date"""
         cleaned_data = {
             'report_datetime': get_utcnow() - relativedelta(months=6),
             'age_in_years': 45,
