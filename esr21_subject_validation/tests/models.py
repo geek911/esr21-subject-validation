@@ -1,9 +1,5 @@
 from django.db import models
-from django.db.models.deletion import PROTECT
-from django_crypto_fields.fields import FirstnameField, LastnameField
 from edc_base.model_mixins import BaseUuidModel, ListModelMixin
-from edc_base.utils import get_utcnow
-from edc_constants.choices import GENDER
 
 
 class ListModel(ListModelMixin, BaseUuidModel):
@@ -24,7 +20,7 @@ class EligibilityConfirmation(BaseUuidModel):
     age_in_years = age_in_years = models.IntegerField()
 
 
-class SubjectConsent(BaseUuidModel):
+class InformedConsent(BaseUuidModel):
 
     subject_identifier = models.CharField(max_length=25)
 
