@@ -1,1 +1,2 @@
 from .eligibility_confirmation_validator import EligibilityConfirmationFormValidator
+from .informed_consent_validator import InformedConsentFormValidator
