@@ -1,5 +1,16 @@
 from django.db import models
+from django.db.models.deletion import PROTECT
 from edc_base.model_mixins import BaseUuidModel, ListModelMixin
+from edc_base.utils import get_utcnow
+
+
+class Appointment(BaseUuidModel):
+
+    subject_identifier = models.CharField(max_length=25)
+
+    appt_datetime = models.DateTimeField(default=get_utcnow)
+
+    visit_code = models.CharField(max_length=25)
 
 
 class ListModel(ListModelMixin, BaseUuidModel):
@@ -43,3 +54,22 @@ class InformedConsent(BaseUuidModel):
     version = models.CharField(
         max_length=10,
         editable=False)
+
+
+class SubjectVisit(BaseUuidModel):
+
+    appointment = models.OneToOneField(Appointment, on_delete=PROTECT)
+
+    subject_identifier = models.CharField(max_length=25)
+
+    visit_code = models.CharField(max_length=25)
+
+    visit_code_sequence = models.IntegerField(default=0)
+
+    report_datetime = models.DateTimeField(
+        default=get_utcnow)
+
+    def save(self, *args, **kwargs):
+        self.visit_code = self.appointment.visit_code
+        self.subject_identifier = self.appointment.subject_identifier
+        super().save(*args, **kwargs)

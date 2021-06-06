@@ -1,2 +1,3 @@
+from .adverse_event_form_validator import AdverseEventFormValidator
 from .eligibility_confirmation_validator import EligibilityConfirmationFormValidator
 from .informed_consent_validator import InformedConsentFormValidator
