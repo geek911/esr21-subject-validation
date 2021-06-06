@@ -73,3 +73,12 @@ class SubjectVisit(BaseUuidModel):
         self.visit_code = self.appointment.visit_code
         self.subject_identifier = self.appointment.subject_identifier
         super().save(*args, **kwargs)
+
+
+class AdverseEvent(models.Model):
+
+    subject_visit = models.OneToOneField(SubjectVisit, on_delete=PROTECT)
+
+    serious_event = models.CharField(max_length=25, blank=True, null=True)
+
+    special_interest_ae = models.CharField(max_length=25, blank=True, null=True)

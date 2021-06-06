@@ -19,7 +19,7 @@ class TestAdverseEventFormValidator(TestCase):
             appointment=appointment)
         self.ae_options = {
             'subject_visit': subject_visit,
-            'start_date': get_utcnow(),
+            'start_date': get_utcnow().date(),
             'status': 'ongoing',
             'ae_grade': 'mild',
             'study_treatmnt_rel': 'not_related',
@@ -49,7 +49,7 @@ class TestAdverseEventFormValidator(TestCase):
             unexpectedly.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow(),
+                               resolution_date=get_utcnow().date(),
                                outcome='resolved')
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
@@ -63,7 +63,7 @@ class TestAdverseEventFormValidator(TestCase):
             the start date of the AE.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow() - relativedelta(days=2),
+                               resolution_date=get_utcnow().date() - relativedelta(days=2),
                                outcome='resolved')
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
@@ -76,8 +76,8 @@ class TestAdverseEventFormValidator(TestCase):
             unexpectedly.
         """
         self.ae_options.update(status='resolved',
-                               start_date=get_utcnow() - relativedelta(months=2),
-                               resolution_date=get_utcnow() - relativedelta(days=23),
+                               start_date=get_utcnow().date() - relativedelta(months=2),
+                               resolution_date=get_utcnow().date() - relativedelta(days=23),
                                outcome='resolved')
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
@@ -91,7 +91,7 @@ class TestAdverseEventFormValidator(TestCase):
             and outcome specified does not match this.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow())
+                               resolution_date=get_utcnow().date())
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
         self.assertRaises(ValidationError, form_validator.validate)
@@ -103,7 +103,7 @@ class TestAdverseEventFormValidator(TestCase):
             tests if the Validation Error is raised unexpectedly.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow(),
+                               resolution_date=get_utcnow().date(),
                                outcome='resolved')
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
@@ -141,7 +141,7 @@ class TestAdverseEventFormValidator(TestCase):
             is resolved with sequelae, but not specified.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow(),
+                               resolution_date=get_utcnow().date(),
                                outcome='resolved_with_sequelae')
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
@@ -154,7 +154,7 @@ class TestAdverseEventFormValidator(TestCase):
             is raised unexpectedly.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow(),
+                               resolution_date=get_utcnow().date(),
                                outcome='resolved_with_sequelae',
                                sequelae_specify='blah')
         form_validator = AdverseEventFormValidator(
