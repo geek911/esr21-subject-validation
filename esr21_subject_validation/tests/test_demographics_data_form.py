@@ -9,50 +9,95 @@ from .models import ListModel
 
 class TestDemographicsDataForm(TestCase):
 
-    def setUp(self):
-        DemographicsDataFormValidator.demographics_data_model = \
-            'esr21_subject_validation.demographicsdata'
 
-        self.demographics_options = {
+    def test_demographics_can_be_validated(self):
+        demographics_options = {
             'dob': (get_utcnow() - relativedelta(years=45)).date(),
-            'age': 45,
+            'household_members': '23',
+            'age': '45',
             'gender': FEMALE,
             'childbearing_potential': NO,
             'if_no_reason': OTHER,
             'if_no_reason_other': 'Test',
             'ethnicity': OTHER,
-            'ethnicity_other': 'Asian',
+            'ethnicity_other': 'ABC',
             'race_of_subject': 'reported',
             'race': ['american', 'asian', 'african',
                      'pacific_islander', 'white']}
-
-    def test_demographics_data(self):
         form_validator = DemographicsDataFormValidator(
-            cleaned_data=self.demographics_options)
+            cleaned_data=demographics_options)
         try:
             form_validator.validate()
         except ValidationError as e:
             self.fail(f'ValidationError unexpectedly raised. Got{e}')
 
-    def test_ethnicity_other_other_invalid(self):
-        self.demographics_options['ethnicity'] = 'Black African'
+    def test_ethnicity_is_other_then_ethnicityother_is_required(self):
+
+        demographics_options = {
+            'dob': (get_utcnow() - relativedelta(years=45)).date(),
+            'household_members': '23',
+            'age': '45',
+            'gender': FEMALE,
+            'childbearing_potential': NO,
+            'ethnicity': OTHER,
+            'race_of_subject': 'reported',
+            'race': ['american', 'asian', 'african',
+                     'pacific_islander', 'white']}
 
         form_validator = DemographicsDataFormValidator(
-            cleaned_data=self.demographics_options)
+            cleaned_data=demographics_options)
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('ethnicity_other', form_validator._errors)
 
-    def test_if_no_reason_invalid(self):
-        self.demographics_options['childbearing_potential'] = YES
+    def test_employmentstatus_is_other_then_employmentstatusother_is_required(self):
+
+        demographics_options = {
+            'dob': (get_utcnow() - relativedelta(years=45)).date(),
+            'household_members': '23',
+            'age': '45',
+            'gender': FEMALE,
+            'childbearing_potential': NO,
+            'employment_status': OTHER,
+            'race_of_subject': 'reported',
+            'race': ['american', 'asian', 'african',
+                     'pacific_islander', 'white']}
 
         form_validator = DemographicsDataFormValidator(
-            cleaned_data=self.demographics_options)
+            cleaned_data=demographics_options)
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('if_no_reason', form_validator._errors)
 
-    def test_race_invalid(self):
-        self.demographics_options['race_of_subject'] = 'not_reported'
+    def test_maritalstatus_is_other_then_maritalstatusother_is_required(self):
+
+        demographics_options = {
+            'dob': (get_utcnow() - relativedelta(years=45)).date(),
+            'household_members': '23',
+            'age': '45',
+            'gender': FEMALE,
+            'childbearing_potential': NO,
+            'marital_status': OTHER,
+            'race_of_subject': 'reported',
+            'race': ['american', 'asian', 'african',
+                     'pacific_islander', 'white']}
+
         form_validator = DemographicsDataFormValidator(
-            cleaned_data=self.demographics_options)
+            cleaned_data=demographics_options)
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('race', form_validator._errors)
+
+    def test_if_house_members_cannot_be_negative(self):
+
+        demographics_options = {
+            'dob': (get_utcnow() - relativedelta(years=45)).date(),
+            'household_members': '23',
+            'age': '45',
+            'gender': FEMALE,
+            'childbearing_potential': NO,
+            'marital_status': OTHER,
+            'household_members': -27,
+            'race_of_subject': 'reported',
+            'race': ['american', 'asian', 'african',
+                     'pacific_islander', 'white']}
+
+
+        form_validator = DemographicsDataFormValidator(
+            cleaned_data=demographics_options)
+        self.assertRaises(ValidationError, form_validator.validate)
+
