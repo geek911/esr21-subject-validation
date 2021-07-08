@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from edc_base.utils import get_utcnow, relativedelta
-from edc_constants.constants import YES, MALE, FEMALE, OMANG
+from edc_constants.constants import YES, MALE, FEMALE, OTHER
 
 from ..form_validators import InformedConsentFormValidator
 from .models import EligibilityConfirmation
@@ -27,7 +27,7 @@ class TestSubjectConsentForm(TestCase):
             'initials': 'TOT',
             'identity': '123425678',
             'confirm_identity': '123425678',
-            'identity_type': OMANG,
+            'identity_type': 'national_identity_card',
             'gender': FEMALE,
             'citizen': YES}
 
@@ -54,6 +54,25 @@ class TestSubjectConsentForm(TestCase):
             cleaned_data=self.consent_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('identity', form_validator._errors)
+
+    def test_consent_gender_other_specify(self):
+        self.consent_options['gender'] = OTHER
+
+        form_validator = InformedConsentFormValidator(
+            cleaned_data=self.consent_options)
+        self.assertRaises(ValidationError, form_validator.validate)
+        self.assertIn('gender_other', form_validator._errors)
+
+    def test_consent_gender_other_provided(self):
+        self.consent_options['gender'] = OTHER
+        self.consent_options['gender_other'] = 'Both'
+
+        form_validator = InformedConsentFormValidator(
+            cleaned_data=self.consent_options)
+        try:
+            form_validator.validate()
+        except ValidationError as e:
+            self.fail(f'ValidationError unexpectedly raised. Got{e}')
 
     def test_consent_identity_numbers_invalid(self):
         self.consent_options['identity'] = 'abcdgts'

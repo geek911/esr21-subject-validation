@@ -2,7 +2,7 @@ import re
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
 from edc_base.utils import age
-from edc_constants.constants import MALE, FEMALE, OMANG
+from edc_constants.constants import MALE, FEMALE
 from edc_form_validators import FormValidator
 
 
@@ -18,9 +18,12 @@ class InformedConsentFormValidator(FormValidator):
         self.screening_identifier = self.cleaned_data.get('screening_identifier')
         super().clean()
 
+        self.validate_gender_other()
         self.validate_dob()
-
         self.validate_identity_number(cleaned_data=self.cleaned_data)
+
+    def validate_gender_other(self):
+        self.validate_other_specify(field='gender')
 
     def validate_identity_number(self, cleaned_data=None):
         identity = cleaned_data.get('identity')
@@ -35,10 +38,10 @@ class InformedConsentFormValidator(FormValidator):
                        '\'Identity\' must match \'confirm identity\'.'}
                 self._errors.update(msg)
                 raise ValidationError(msg)
-            if cleaned_data.get('identity_type') == OMANG:
+            if cleaned_data.get('identity_type') == 'national_identity_card':
                 if len(cleaned_data.get('identity')) != 9:
                     msg = {'identity':
-                           'Country identity provided should contain 9 values.'
+                           'National identity provided should contain 9 values.'
                            ' Please correct.'}
                     self._errors.update(msg)
                     raise ValidationError(msg)
@@ -72,7 +75,7 @@ class InformedConsentFormValidator(FormValidator):
                     and eligibility_confirmation.age_in_years != age_in_years):
                 message = {'dob':
                            'The age derived from Date of birth does not '
-                           'match the age provided in the Potlako+ Eligibility'
+                           'match the age provided in the Eligibility Confirmation'
                            f' form. Expected \'{eligibility_confirmation.age_in_years}\' '
                            f'got \'{age_in_years}\''}
                 self._errors.update(message)
