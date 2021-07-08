@@ -10,8 +10,6 @@ class DemographicsDataFormValidator(FormValidator):
         All validations defined in directly on the forms will be called by the super
         """
         super().clean()
-
-
         """
         Will make the {varable}_other required 
         """
