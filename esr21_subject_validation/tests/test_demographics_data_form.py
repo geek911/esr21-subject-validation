@@ -1,17 +1,14 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from edc_base.utils import get_utcnow, relativedelta
-from edc_constants.constants import NO, MALE, FEMALE, OTHER, YES
+from edc_constants.constants import NO, FEMALE, OTHER, YES
 
 from ..form_validators import DemographicsDataFormValidator
-from .models import ListModel
 
 
 class TestDemographicsDataForm(TestCase):
 
     def setUp(self):
-        DemographicsDataFormValidator.demographics_data_model = \
-            'esr21_subject_validation.demographicsdata'
 
         self.demographics_options = {
             'dob': (get_utcnow() - relativedelta(years=45)).date(),
