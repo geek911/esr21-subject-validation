@@ -10,9 +10,9 @@ from ..form_validators import PhysicalFormValidator
 
 class TestPhysicalExamForm(TestCase):
 
-    
 
-    def test_if_physicalexam_is_no_reasonnotdone_and_exam_is_required(self):
+
+    def test_exam_check_required(self):
         data = {
             'physical_exam': NO
         }
@@ -20,7 +20,7 @@ class TestPhysicalExamForm(TestCase):
         self.assertRaises(ValidationError, form.validate)
 
 
-    def test_if_abnormalities_found_is_yes_then_clinically_significant_is_required(self):
+    def test_checks_description_invalid(self):
 
         data = {
             'abnormalities_found': YES

@@ -8,7 +8,7 @@ from ..form_validators import PregnancyTestFormValidator
 
 class TestPregnencyTestFormValidator(TestCase):
 
-    def test_preg_performed_then_result_is_required(self):
+    def test_result_invalid(self):
         data = {
             'preg_performed': YES
         }
