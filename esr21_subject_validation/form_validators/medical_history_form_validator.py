@@ -19,6 +19,4 @@ class MedicalHistoryFormValidator(CRFFormValidator, FormValidator):
                                m2m_field='comorbidities',
                                field_other='comorbidities_other')
 
-        no_internal_trips = self.cleaned_data.get('no_internal_trips') or 0
-
         super().clean()
