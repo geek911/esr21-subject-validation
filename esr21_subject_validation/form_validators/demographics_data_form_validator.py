@@ -10,6 +10,7 @@ class DemographicsDataFormValidator(FormValidator):
         All validations defined in directly on the forms will be called by the super
         """
         super().clean()
+
         """
         Will make the {varable}_other required 
         """
@@ -22,9 +23,9 @@ class DemographicsDataFormValidator(FormValidator):
         """
         self.household_members = self.cleaned_data.get('household_members')
 
-        if int(self.household_members) < 0:
-            self.validation_error_message('Number cannot be negative')
+        if self.household_members < 0:
+            raise ValidationError('Number cannot be negative')
     
 
-    def validation_error_message(msg: str):
-        raise forms.ValidationError(msg)
+
+    
