@@ -11,10 +11,13 @@ class AdverseEventFormValidator(FormValidator):
         self.validate_ae_end_date(cleaned_data=cleaned_data)
         self.validate_outcome(cleaned_data=cleaned_data)
         self.validate_maae()
+        self.validate_treatment_given()
+        self.validate_discontinuation()
+        self.validate_ae_death_status(cleaned_data=cleaned_data)
 
     def validate_experienced_ae(self):
-        fields = ['ae_name', 'event_details', 'meddra_pcode', 'meddra_version',
-                  'meddra_pname', 'start_date', 'status', 'ae_grade',
+        fields = ['ae_name', 'meddra_pname', 'meddra_pcode', 'meddra_version',
+                  'event_details', 'start_date', 'status', 'ae_grade',
                   'study_treatmnt_rel', 'nonstudy_treatmnt_rel',
                   'studyproc_treatmnt_rel', 'action_taken', 'outcome',
                   'serious_event', 'special_interest_ae', 'medically_attended_ae',
@@ -67,3 +70,29 @@ class AdverseEventFormValidator(FormValidator):
             YES,
             field='medically_attended_ae',
             field_required='maae_specify')
+
+    def validate_treatment_given(self):
+        self.required_if(
+            YES,
+            field='treatment_given',
+            field_required='treatmnt_given_specify')
+
+    def validate_discontinuation(self):
+        self.required_if(
+            YES,
+            field='ae_study_discontinued',
+            field_required='discontn_dt')
+
+    def validate_ae_death_status(self, cleaned_data=None):
+        status = cleaned_data.get('status')
+        outcome = cleaned_data.get('outcome')
+        if status and status == 'death' and outcome != 'fatal':
+                msg = {'outcome':
+                       'Status of the AE is death, revise the outcome to fatal/death'}
+                self._errors.update(msg)
+                raise ValidationError(msg)
+        elif status != 'death' and outcome == 'fatal':
+            msg = {'outcome':
+                   'Status of the AE is not death, outcome can not be fatal/death'}
+            self._errors.update(msg)
+            raise ValidationError(msg)
