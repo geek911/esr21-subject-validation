@@ -10,6 +10,8 @@ from ..form_validators import PhysicalFormValidator
 
 class TestPhysicalExamForm(TestCase):
 
+    
+
     def test_if_physicalexam_is_no_reasonnotdone_and_exam_is_required(self):
         data = {
             'physical_exam': NO
