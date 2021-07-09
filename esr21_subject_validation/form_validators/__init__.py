@@ -1,4 +1,5 @@
 from .adverse_event_form_validator import AdverseEventFormValidator
+from .concomitant_medication_form_validator import ConcomitantMedicationFormValidator
 from .demographics_data_form_validator import DemographicsDataFormValidator
 from .eligibility_confirmation_validator import EligibilityConfirmationFormValidator
 from .hospitalization_form_validator import HospitalizationFormValidator
