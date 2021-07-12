@@ -41,7 +41,7 @@ class TestAdverseEventFormValidator(TestCase):
         self.ae_options.update(status='resolved', )
         form_validator = AdverseEventFormValidator(cleaned_data=self.ae_options)
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('resolution_date', form_validator._errors)
+        self.assertIn('stop_date', form_validator._errors)
 
     def test_ae_status_resolved_end_date_valid(self):
         """ Tests if the AE status is `resolved` and end date is given, cleaned
@@ -49,7 +49,7 @@ class TestAdverseEventFormValidator(TestCase):
             unexpectedly.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow().date(),
+                               stop_date=get_utcnow().date(),
                                outcome='resolved')
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
@@ -63,12 +63,12 @@ class TestAdverseEventFormValidator(TestCase):
             the start date of the AE.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow().date() - relativedelta(days=2),
+                               stop_date=get_utcnow().date() - relativedelta(days=2),
                                outcome='resolved')
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
         self.assertRaises(ValidationError, form_validator.validate)
-        self.assertIn('resolution_date', form_validator._errors)
+        self.assertIn('stop_date', form_validator._errors)
 
     def test_ae_end_dt_after_start_dt_valid(self):
         """ Tests if the AE end date is after the start date, cleaned data
@@ -77,7 +77,7 @@ class TestAdverseEventFormValidator(TestCase):
         """
         self.ae_options.update(status='resolved',
                                start_date=get_utcnow().date() - relativedelta(months=2),
-                               resolution_date=get_utcnow().date() - relativedelta(days=23),
+                               stop_date=get_utcnow().date() - relativedelta(days=23),
                                outcome='resolved')
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
@@ -91,7 +91,7 @@ class TestAdverseEventFormValidator(TestCase):
             and outcome specified does not match this.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow().date())
+                               stop_date=get_utcnow().date())
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
         self.assertRaises(ValidationError, form_validator.validate)
@@ -103,7 +103,7 @@ class TestAdverseEventFormValidator(TestCase):
             tests if the Validation Error is raised unexpectedly.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow().date(),
+                               stop_date=get_utcnow().date(),
                                outcome='resolved')
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
@@ -141,7 +141,7 @@ class TestAdverseEventFormValidator(TestCase):
             is resolved with sequelae, but not specified.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow().date(),
+                               stop_date=get_utcnow().date(),
                                outcome='resolved_with_sequelae')
         form_validator = AdverseEventFormValidator(
             cleaned_data=self.ae_options)
@@ -154,7 +154,7 @@ class TestAdverseEventFormValidator(TestCase):
             is raised unexpectedly.
         """
         self.ae_options.update(status='resolved',
-                               resolution_date=get_utcnow().date(),
+                               stop_date=get_utcnow().date(),
                                outcome='resolved_with_sequelae',
                                sequelae_specify='blah')
         form_validator = AdverseEventFormValidator(
