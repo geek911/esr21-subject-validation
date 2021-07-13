@@ -24,7 +24,7 @@ class TestPregnancyStatusForm(TestCase):
             self.fail(f'ValidationError unexpectedly raised. Got{e}')
 
     def test_contraceptive_usage_invalid(self):
-        """ Assert that if contraception  usage is YES, then contraception specification
+        """ Assert that if contraception usage is YES, then contraception specification
          is required.
         """
         self.pregnancy_status_options['contraceptive_usage'] = YES
