@@ -13,7 +13,7 @@ class VitalSignsFormValidator(CRFFormValidator, FormValidator):
 
         self.required_if(YES,
                          field='vital_signs_measured',
-                         required_field='assessment_dt')
+                         field_required='assessment_dt')
 
         fields_required = ['assessment_dt', 'systolic_bp',
                            'diastolic_bp', 'heart_rate',
