@@ -25,7 +25,7 @@ class VaccinationDetailsFormValidatorTests(TestCase):
             'provider_name': 'SPA',
             'location': 'Arm',
             'location_other': None,
-            'next_vaccination': 'ABSC',
+            'next_vaccination_date': 'ABSC',
 
         }
 
