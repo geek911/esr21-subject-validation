@@ -31,6 +31,7 @@ class VaccinationDetailsFormValidatorTests(TestCase):
 
     def test_is_received_dose_required(self):
         field_name = 'is_received_dose'
+
         self.data[field_name] = None
 
         form = VaccineDetailsFormValidator(cleaned_data=self.data)
