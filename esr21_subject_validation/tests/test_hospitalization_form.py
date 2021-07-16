@@ -32,7 +32,7 @@ class TestHospitalizationForm(TestCase):
             'reason_other': None,
             'covid_symptoms': ListModel.objects.all()}
 
-    def test_demographics_data(self):
+    def test_hospitialization_data(self):
 
         form_validator = HospitalizationFormValidator(
             cleaned_data=self.hospitalization_options)
