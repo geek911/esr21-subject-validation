@@ -11,3 +11,4 @@ from .special_interest_adverse_event_form_validator import SpecialInterestAdvers
 from .physical_exam_form_validator import PhysicalFormValidator
 from .pregnancy_test_form_validator import PregnancyTestFormValidator
 from .vital_signs_form_validator import VitalSignsFormValidator
+from .vaccination_details_form_validator import VaccineDetailsFormValidator
