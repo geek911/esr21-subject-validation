@@ -8,7 +8,7 @@ from .crf_form_validator import CRFFormValidator
 
 class PregnancyStatusFormValidator(CRFFormValidator, FormValidator):
 
-    subject_consent_model = 'flourish_caregiver.subjectconsent'
+    subject_consent_model = 'esr21_subject.informedconsent'
 
     @property
     def subject_consent_cls(self):
@@ -51,4 +51,4 @@ class PregnancyStatusFormValidator(CRFFormValidator, FormValidator):
                     'Please complete Subject Consent form '
                     f'before proceeding.')
         else:
-            return age(subject_consent_obj.dob, get_utcnow())
+            return age(subject_consent_obj.dob, get_utcnow()).years

@@ -37,7 +37,7 @@ class InformedConsent(BaseUuidModel):
 
     screening_identifier = models.CharField(max_length=50)
 
-    gender = models.CharField(max_length=25)
+    gender = models.CharField(max_length=10)
 
     is_literate = models.CharField(max_length=25,
                                    blank=True,
@@ -49,7 +49,7 @@ class InformedConsent(BaseUuidModel):
 
     dob = models.DateField()
 
-    consent_datetime = models.DateTimeField()
+    consent_datetime = models.DateTimeField(default=get_utcnow())
 
     version = models.CharField(
         max_length=10,
