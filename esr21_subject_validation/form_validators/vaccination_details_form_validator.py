@@ -10,7 +10,7 @@ class VaccineDetailsFormValidator(CRFFormValidator, FormValidator):
 
         self.required_if(YES,
                          field="received_dose",
-                         field_required="is_received_dose")
+                         field_required="received_dose_before")
 
         self.required_if(YES,
                          field="received_dose",
@@ -43,7 +43,7 @@ class VaccineDetailsFormValidator(CRFFormValidator, FormValidator):
         self.validate_other_specify(field="location")
 
         self.required_if(FIRST_DOSE,
-                         field="is_received_dose",
+                         field="received_dose_before",
                          field_required="next_vaccination_data")
 
         super().clean()

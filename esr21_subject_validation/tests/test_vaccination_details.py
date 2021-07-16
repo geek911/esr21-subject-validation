@@ -15,7 +15,7 @@ class VaccinationDetailsFormValidatorTests(TestCase):
         self.data = {
             'received_dose': YES,
             'report_datetime': '01/01/0001',
-            'is_received_dose': 'ABC',
+            'received_dose_before': 'ABC',
             'vaccination_site': 'ABC',
             'vaccination_date': 'ABC',
             'admin_per_protocol': "DATa",
@@ -30,7 +30,7 @@ class VaccinationDetailsFormValidatorTests(TestCase):
         }
 
     def test_is_received_dose_required(self):
-        field_name = 'is_received_dose'
+        field_name = 'received_dose_before'
 
         self.data[field_name] = None
 
@@ -118,7 +118,7 @@ class VaccinationDetailsFormValidatorTests(TestCase):
         self.assertIn('location_other', form._errors)
 
     def test_next_vaccination_required(self):
-        field_name = 'is_received_dose'
+        field_name = 'received_dose_before'
 
         self.data[field_name] = FIRST_DOSE
 
