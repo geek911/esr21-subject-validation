@@ -8,25 +8,25 @@ class VaccineDetailsFormValidator(CRFFormValidator, FormValidator):
 
     def clean(self):
 
-        required_fields = ['received_dose_before', 'vaccination_site',
-                           'vaccination_date', 'admin_per_protocol']
+        required_fields = ['vaccination_site', 'vaccination_date', 'lot_number',
+                           'expiry_date', 'provider_name']
 
         for required_field in required_fields:
             self.required_if(YES,
                              field='received_dose',
                              field_required=required_field)
 
+        applicable_fields = ['received_dose_before', 'location',
+                             'admin_per_protocol']
+
+        for applicable_field in applicable_fields:
+            self.applicable_if(YES,
+                               field='received_dose',
+                               field_applicable=applicable_field)
+
         self.required_if(NO,
                          field='admin_per_protocol',
                          field_required='reason_not_per_protocol')
-
-        received_fields = ['lot_number', 'expiry_date', 'provider_name']
-
-        for received_field in received_fields:
-
-            self.required_if(YES,
-                             field='received_dose',
-                             field_required=received_field)
 
         self.validate_other_specify(field='location')
 

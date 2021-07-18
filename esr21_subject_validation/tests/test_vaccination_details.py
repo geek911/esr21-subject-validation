@@ -1,9 +1,7 @@
-import unittest
-
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from edc_base.utils import get_utcnow, relativedelta
-from edc_constants.constants import NO, YES, OTHER
+from edc_constants.constants import NO, YES, OTHER, NOT_APPLICABLE
 
 from ..form_validators import VaccineDetailsFormValidator
 from ..constants import *
@@ -32,7 +30,7 @@ class VaccinationDetailsFormValidatorTests(TestCase):
     def test_is_received_dose_required(self):
         field_name = 'received_dose_before'
 
-        self.data[field_name] = None
+        self.data[field_name] = NOT_APPLICABLE
 
         form = VaccineDetailsFormValidator(cleaned_data=self.data)
 
@@ -60,7 +58,7 @@ class VaccinationDetailsFormValidatorTests(TestCase):
     def test_admin_per_protocol_required(self):
         field_name = 'admin_per_protocol'
 
-        self.data[field_name] = None
+        self.data[field_name] = NOT_APPLICABLE
 
         form = VaccineDetailsFormValidator(cleaned_data=self.data)
 
@@ -106,6 +104,16 @@ class VaccinationDetailsFormValidatorTests(TestCase):
 
         self.assertRaises(ValidationError, form.validate)
         self.assertIn(field_name, form._errors)
+
+    def test_location_required(self):
+        field_name = 'location'
+
+        self.data[field_name] = NOT_APPLICABLE
+
+        form = VaccineDetailsFormValidator(cleaned_data=self.data)
+
+        self.assertRaises(ValidationError, form.validate)
+        self.assertIn('location', form._errors)
 
     def test_location_other_required(self):
         field_name = 'location'
