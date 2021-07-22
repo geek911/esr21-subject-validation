@@ -2,7 +2,7 @@ from edc_constants.choices import NO
 from edc_form_validators import FormValidator
 
 
-class HospitalizationFormValidator(FormValidator):
+class HospitalisationFormValidator(FormValidator):
 
     def clean(self):
         """
