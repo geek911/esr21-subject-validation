@@ -28,7 +28,8 @@ class InformedConsentFormValidator(FormValidator):
     def validate_identity_number(self, cleaned_data=None):
         identity = cleaned_data.get('identity')
         if identity:
-            if not re.match('[0-9]+$', identity):
+            id_regex = r'[A-Z0-9]+'
+            if not re.match(id_regex, identity):
                 message = {'identity': 'Identity number must be digits.'}
                 self._errors.update(message)
                 raise ValidationError(message)
