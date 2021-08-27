@@ -2,12 +2,11 @@ import re
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
 from edc_base.utils import age
-from edc_constants.constants import MALE, FEMALE
+from edc_constants.constants import MALE, FEMALE, YES
 from edc_form_validators import FormValidator
 
 
 class InformedConsentFormValidator(FormValidator):
-
     eligibility_confirmation_model = 'esr21_subject.eligibilityconfirmation'
 
     @property
@@ -21,6 +20,7 @@ class InformedConsentFormValidator(FormValidator):
         self.validate_gender_other()
         self.validate_dob()
         self.validate_identity_number(cleaned_data=self.cleaned_data)
+        self.validate_hiv_testing_date()
 
     def validate_gender_other(self):
         self.validate_other_specify(field='gender')
@@ -36,27 +36,27 @@ class InformedConsentFormValidator(FormValidator):
             if cleaned_data.get('identity') != cleaned_data.get(
                     'confirm_identity'):
                 msg = {'identity':
-                       '\'Identity\' must match \'confirm identity\'.'}
+                           '\'Identity\' must match \'confirm identity\'.'}
                 self._errors.update(msg)
                 raise ValidationError(msg)
             if cleaned_data.get('identity_type') == 'national_identity_card':
                 if len(cleaned_data.get('identity')) != 9:
                     msg = {'identity':
-                           'National identity provided should contain 9 values.'
-                           ' Please correct.'}
+                               'National identity provided should contain 9 values.'
+                               ' Please correct.'}
                     self._errors.update(msg)
                     raise ValidationError(msg)
                 gender = cleaned_data.get('gender')
                 if gender == FEMALE and cleaned_data.get('identity')[4] != '2':
                     msg = {'identity':
-                           'Participant gender is Female. Please correct '
-                           'identity number.'}
+                               'Participant gender is Female. Please correct '
+                               'identity number.'}
                     self._errors.update(msg)
                     raise ValidationError(msg)
                 elif gender == MALE and cleaned_data.get('identity')[4] != '1':
                     msg = {'identity':
-                           'Participant is Male. Please correct identity '
-                           'number.'}
+                               'Participant is Male. Please correct identity '
+                               'number.'}
                     self._errors.update(msg)
                     raise ValidationError(msg)
 
@@ -75,9 +75,14 @@ class InformedConsentFormValidator(FormValidator):
             if (eligibility_confirmation.age_in_years
                     and eligibility_confirmation.age_in_years != age_in_years):
                 message = {'dob':
-                           'The age derived from Date of birth does not '
-                           'match the age provided in the Eligibility Confirmation'
-                           f' form. Expected \'{eligibility_confirmation.age_in_years}\' '
-                           f'got \'{age_in_years}\''}
+                               'The age derived from Date of birth does not '
+                               'match the age provided in the Eligibility Confirmation'
+                               f' form. Expected \'{eligibility_confirmation.age_in_years}\' '
+                               f'got \'{age_in_years}\''}
                 self._errors.update(message)
                 raise ValidationError(message)
+
+    def validate_hiv_testing_date(self):
+        hiv_testing_consent = self.cleaned_data.get('hiv_testing_consent')
+        # hiv_testing_date = self.cleaned_data.get('hiv_testing_date')
+        self.required_if(hiv_testing_consent == YES, field='hiv_testing_consent', field_required='hiv_testing_date')
