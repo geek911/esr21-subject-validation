@@ -20,7 +20,6 @@ class InformedConsentFormValidator(FormValidator):
         self.validate_gender_other()
         self.validate_dob()
         self.validate_identity_number(cleaned_data=self.cleaned_data)
-        self.validate_hiv_testing_date()
 
     def validate_gender_other(self):
         self.validate_other_specify(field='gender')
@@ -81,8 +80,3 @@ class InformedConsentFormValidator(FormValidator):
                                f'got \'{age_in_years}\''}
                 self._errors.update(message)
                 raise ValidationError(message)
-
-    def validate_hiv_testing_date(self):
-        hiv_testing_consent = self.cleaned_data.get('hiv_testing_consent')
-        # hiv_testing_date = self.cleaned_data.get('hiv_testing_date')
-        self.required_if(hiv_testing_consent == YES, field='hiv_testing_consent', field_required='hiv_testing_date')
