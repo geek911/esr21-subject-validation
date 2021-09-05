@@ -1,6 +1,4 @@
 from django.apps import apps as django_apps
-from django.core.exceptions import ValidationError
-from edc_base.utils import age, get_utcnow
 from edc_constants.constants import OTHER, YES
 from edc_form_validators import FormValidator
 from .crf_form_validator import CRFFormValidator
@@ -31,24 +29,6 @@ class PregnancyStatusFormValidator(CRFFormValidator, FormValidator):
                                m2m_field='contraceptive',
                                field_other='contraceptive_other')
 
-        self.applicable_if_true(self.participant_age > 50,
-                                field_applicable='post_menopausal_range')
-
         self.validate_other_specify(field='post_menopausal')
 
         super().clean()
-
-    @property
-    def participant_age(self):
-
-        subject_identifier = self.cleaned_data.get('subject_visit').subject_identifier
-
-        try:
-            subject_consent_obj = self.subject_consent_cls.objects.get(
-                subject_identifier=subject_identifier)
-        except self.subject_consent_cls.DoesNotExist:
-            raise ValidationError(
-                    'Please complete Subject Consent form '
-                    f'before proceeding.')
-        else:
-            return age(subject_consent_obj.dob, get_utcnow()).years
