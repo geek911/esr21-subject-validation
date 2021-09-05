@@ -6,6 +6,18 @@ __pycache__/
 # C extensions
 *.so
 
+# Auto-generated tag files
+tags
+
+.pydevproject
+.project
+.settings/
+*migrations
+#bhp_utility_systems/apps/*/migrations/
+db.sqlite3
+.DS_Store
+*media
+
 # Distribution / packaging
 .Python
 build/
