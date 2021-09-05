@@ -32,6 +32,6 @@ class VaccineDetailsFormValidator(CRFFormValidator, FormValidator):
 
         self.required_if(FIRST_DOSE,
                          field='received_dose_before',
-                         field_required='next_vaccination_data')
+                         field_required='next_vaccination_date')
 
         super().clean()

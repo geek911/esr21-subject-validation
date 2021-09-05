@@ -1,9 +1,9 @@
-
 from django.core.exceptions import ValidationError
 from edc_constants.choices import NO
 from edc_constants.constants import YES
 from edc_form_validators import FormValidator
 from django import forms
+
 
 class PhysicalFormValidator(FormValidator):
     def clean(self):
@@ -11,9 +11,8 @@ class PhysicalFormValidator(FormValidator):
         """
         2 subsequence questions are required if the physical variable is a NO
         """
-        self.required_if(NO, field='physical_exam', field_required='reason_not_done')
-        self.required_if(NO, field='physical_exam', field_required='exam_date')
-
+        self.applicable_if(NO, field='physical_exam', field_applicable='reason_not_done')
+        self.required_if(YES, field='physical_exam', field_required='exam_date')
 
         self.required_if(YES, field='abnormalities_found', field_required='clinically_significant')
 
@@ -28,9 +27,3 @@ class PhysicalFormValidator(FormValidator):
         self.required_if('abnormal', field='abdominal_check', field_required='abdominal_description')
         self.required_if('abnormal', field='skin_check', field_required='skin_description')
         self.required_if('abnormal', field='neurological_check', field_required='neurological_description')
-
-
-
-
-
-        
