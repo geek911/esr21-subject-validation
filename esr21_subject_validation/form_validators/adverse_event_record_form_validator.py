@@ -3,30 +3,16 @@ from edc_constants.constants import YES
 from edc_form_validators import FormValidator
 
 
-class AdverseEventFormValidator(FormValidator):
+class AdverseEventRecordFormValidator(FormValidator):
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        self.validate_experienced_ae()
         self.validate_ae_end_date(cleaned_data=cleaned_data)
         self.validate_outcome(cleaned_data=cleaned_data)
         self.validate_maae()
         self.validate_treatment_given()
         self.validate_discontinuation()
         self.validate_ae_death_status(cleaned_data=cleaned_data)
-
-    def validate_experienced_ae(self):
-        fields = ['ae_name', 'meddra_pname', 'meddra_pcode', 'meddra_version',
-                  'event_details', 'start_date', 'status', 'ae_grade',
-                  'study_treatmnt_rel', 'nonstudy_treatmnt_rel',
-                  'studyproc_treatmnt_rel', 'action_taken', 'outcome',
-                  'serious_event', 'special_interest_ae', 'medically_attended_ae',
-                  'treatment_given', 'ae_study_discontinued', 'covid_related_ae']
-        for field in fields:
-            self.required_if(
-                YES,
-                field='experienced_ae',
-                field_required=field)
 
     def validate_ae_end_date(self, cleaned_data=None):
         self.required_if(

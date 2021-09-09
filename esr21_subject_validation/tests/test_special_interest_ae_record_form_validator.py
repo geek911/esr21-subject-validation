@@ -3,7 +3,7 @@ from django.test import TestCase
 from edc_base.utils import get_utcnow, relativedelta
 from edc_constants.constants import YES
 
-from ..form_validators import SpecialInterestAdverseEventFormValidator
+from ..form_validators import SpecialInterestAERecordFormValidator
 from .models import AdverseEvent, Appointment, SubjectVisit
 
 
@@ -34,8 +34,8 @@ class TestSpecialInterestAdverseEventFormValidator(TestCase):
             the AESI start date.
         """
         self.aesi_options.update(
-            date_aware_of=get_utcnow().date() - relativedelta(days=2), )
-        form_validator = SpecialInterestAdverseEventFormValidator(
+            date_aware_of=get_utcnow().date() - relativedelta(days=2),)
+        form_validator = SpecialInterestAERecordFormValidator(
             cleaned_data=self.aesi_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('date_aware_of', form_validator._errors)
@@ -45,7 +45,7 @@ class TestSpecialInterestAdverseEventFormValidator(TestCase):
             data validates or fails the tests if the Validation Error is raised
             unexpectedly.
         """
-        form_validator = SpecialInterestAdverseEventFormValidator(
+        form_validator = SpecialInterestAERecordFormValidator(
             cleaned_data=self.aesi_options)
         try:
             form_validator.validate()
