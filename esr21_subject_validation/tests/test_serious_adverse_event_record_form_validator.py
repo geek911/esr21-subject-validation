@@ -3,11 +3,11 @@ from django.test import TestCase
 from edc_base.utils import get_utcnow, relativedelta
 from edc_constants.constants import NO, YES, OTHER
 
-from ..form_validators import SeriousAdverseEventFormValidator
+from ..form_validators import SeriousAdverseEventRecordFormValidator
 from .models import AdverseEvent, Appointment, SubjectVisit, ListModel
 
 
-class TestSeriousAdverseEventFormValidator(TestCase):
+class TestSeriousAdverseEventRecordFormValidator(TestCase):
 
     def setUp(self):
         subject_identifier = '1234567'
@@ -28,7 +28,6 @@ class TestSeriousAdverseEventFormValidator(TestCase):
             'date_aware_of': get_utcnow().date(),
             'seriousness_criteria': ListModel.objects.all(),
             'rationale': 'blah',
-            'event_abate': NO,
             'event_reappear': NO,
             'describe_sae_treatmnt': 'blahblah',
             'test_performed': 'a bunch of tests',
@@ -39,8 +38,8 @@ class TestSeriousAdverseEventFormValidator(TestCase):
             the SAE start date.
         """
         self.sae_options.update(
-            date_aware_of=get_utcnow().date() - relativedelta(days=2), )
-        form_validator = SeriousAdverseEventFormValidator(
+            date_aware_of=get_utcnow().date() - relativedelta(days=2),)
+        form_validator = SeriousAdverseEventRecordFormValidator(
             cleaned_data=self.sae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('date_aware_of', form_validator._errors)
@@ -50,7 +49,7 @@ class TestSeriousAdverseEventFormValidator(TestCase):
             data validates or fails the tests if the Validation Error is raised
             unexpectedly.
         """
-        form_validator = SeriousAdverseEventFormValidator(
+        form_validator = SeriousAdverseEventRecordFormValidator(
             cleaned_data=self.sae_options)
         try:
             form_validator.validate()
@@ -62,7 +61,7 @@ class TestSeriousAdverseEventFormValidator(TestCase):
             criteria is not hospitalization but admission date provided.
         """
         self.sae_options.update(admission_date=get_utcnow().date())
-        form_validator = SeriousAdverseEventFormValidator(
+        form_validator = SeriousAdverseEventRecordFormValidator(
             cleaned_data=self.sae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('admission_date', form_validator._errors)
@@ -75,7 +74,7 @@ class TestSeriousAdverseEventFormValidator(TestCase):
         self.sae_options.update(
             seriousness_criteria=ListModel.objects.all(),
             admission_date=None)
-        form_validator = SeriousAdverseEventFormValidator(
+        form_validator = SeriousAdverseEventRecordFormValidator(
             cleaned_data=self.sae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('admission_date', form_validator._errors)
@@ -89,7 +88,7 @@ class TestSeriousAdverseEventFormValidator(TestCase):
         self.sae_options.update(
             seriousness_criteria=ListModel.objects.all(),
             admission_date=get_utcnow().date())
-        form_validator = SeriousAdverseEventFormValidator(
+        form_validator = SeriousAdverseEventRecordFormValidator(
             cleaned_data=self.sae_options)
         try:
             form_validator.validate()
@@ -103,7 +102,7 @@ class TestSeriousAdverseEventFormValidator(TestCase):
         self.sae_options.update(
             admission_date=None,
             discharge_date=get_utcnow().date())
-        form_validator = SeriousAdverseEventFormValidator(
+        form_validator = SeriousAdverseEventRecordFormValidator(
             cleaned_data=self.sae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('discharge_date', form_validator._errors)
@@ -116,7 +115,7 @@ class TestSeriousAdverseEventFormValidator(TestCase):
         self.sae_options.update(
             start_date=get_utcnow().date() - relativedelta(days=2),
             admission_date=get_utcnow().date() - relativedelta(days=5))
-        form_validator = SeriousAdverseEventFormValidator(
+        form_validator = SeriousAdverseEventRecordFormValidator(
             cleaned_data=self.sae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('admission_date', form_validator._errors)
@@ -129,7 +128,7 @@ class TestSeriousAdverseEventFormValidator(TestCase):
         self.sae_options.update(
             seriousness_criteria=ListModel.objects.all(),
             incapacity_specify=None)
-        form_validator = SeriousAdverseEventFormValidator(
+        form_validator = SeriousAdverseEventRecordFormValidator(
             cleaned_data=self.sae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('incapacity_specify', form_validator._errors)
@@ -143,7 +142,7 @@ class TestSeriousAdverseEventFormValidator(TestCase):
         self.sae_options.update(
             seriousness_criteria=ListModel.objects.all(),
             incapacity_specify='blah')
-        form_validator = SeriousAdverseEventFormValidator(
+        form_validator = SeriousAdverseEventRecordFormValidator(
             cleaned_data=self.sae_options)
         try:
             form_validator.validate()
@@ -158,7 +157,7 @@ class TestSeriousAdverseEventFormValidator(TestCase):
         self.sae_options.update(
             seriousness_criteria=ListModel.objects.all(),
             medical_event_other=None)
-        form_validator = SeriousAdverseEventFormValidator(
+        form_validator = SeriousAdverseEventRecordFormValidator(
             cleaned_data=self.sae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('medical_event_other', form_validator._errors)
@@ -172,7 +171,7 @@ class TestSeriousAdverseEventFormValidator(TestCase):
         self.sae_options.update(
             seriousness_criteria=ListModel.objects.all(),
             medical_event_other='blah')
-        form_validator = SeriousAdverseEventFormValidator(
+        form_validator = SeriousAdverseEventRecordFormValidator(
             cleaned_data=self.sae_options)
         try:
             form_validator.validate()

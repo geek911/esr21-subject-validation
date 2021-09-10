@@ -3,11 +3,11 @@ from django.test import TestCase
 from edc_base.utils import get_utcnow, relativedelta
 from edc_constants.constants import NO, YES
 
-from ..form_validators import AdverseEventFormValidator
+from ..form_validators import AdverseEventRecordFormValidator
 from .models import Appointment, SubjectVisit
 
 
-class TestAdverseEventFormValidator(TestCase):
+class TestAdverseEventRecordFormValidator(TestCase):
 
     def setUp(self):
         subject_identifier = '1234567'
@@ -38,8 +38,8 @@ class TestAdverseEventFormValidator(TestCase):
         """ Assert that the AE end date raises an error if status is resolved
             and end date is missing.
         """
-        self.ae_options.update(status='resolved', )
-        form_validator = AdverseEventFormValidator(cleaned_data=self.ae_options)
+        self.ae_options.update(status='resolved',)
+        form_validator = AdverseEventRecordFormValidator(cleaned_data=self.ae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('stop_date', form_validator._errors)
 
@@ -51,7 +51,7 @@ class TestAdverseEventFormValidator(TestCase):
         self.ae_options.update(status='resolved',
                                stop_date=get_utcnow().date(),
                                outcome='resolved')
-        form_validator = AdverseEventFormValidator(
+        form_validator = AdverseEventRecordFormValidator(
             cleaned_data=self.ae_options)
         try:
             form_validator.validate()
@@ -65,7 +65,7 @@ class TestAdverseEventFormValidator(TestCase):
         self.ae_options.update(status='resolved',
                                stop_date=get_utcnow().date() - relativedelta(days=2),
                                outcome='resolved')
-        form_validator = AdverseEventFormValidator(
+        form_validator = AdverseEventRecordFormValidator(
             cleaned_data=self.ae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('stop_date', form_validator._errors)
@@ -79,7 +79,7 @@ class TestAdverseEventFormValidator(TestCase):
                                start_date=get_utcnow().date() - relativedelta(months=2),
                                stop_date=get_utcnow().date() - relativedelta(days=23),
                                outcome='resolved')
-        form_validator = AdverseEventFormValidator(
+        form_validator = AdverseEventRecordFormValidator(
             cleaned_data=self.ae_options)
         try:
             form_validator.validate()
@@ -92,7 +92,7 @@ class TestAdverseEventFormValidator(TestCase):
         """
         self.ae_options.update(status='resolved',
                                stop_date=get_utcnow().date())
-        form_validator = AdverseEventFormValidator(
+        form_validator = AdverseEventRecordFormValidator(
             cleaned_data=self.ae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('outcome', form_validator._errors)
@@ -105,7 +105,7 @@ class TestAdverseEventFormValidator(TestCase):
         self.ae_options.update(status='resolved',
                                stop_date=get_utcnow().date(),
                                outcome='resolved')
-        form_validator = AdverseEventFormValidator(
+        form_validator = AdverseEventRecordFormValidator(
             cleaned_data=self.ae_options)
         try:
             form_validator.validate()
@@ -118,7 +118,7 @@ class TestAdverseEventFormValidator(TestCase):
         """
         self.ae_options.update(status='ongoing',
                                outcome='resolved')
-        form_validator = AdverseEventFormValidator(
+        form_validator = AdverseEventRecordFormValidator(
             cleaned_data=self.ae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('outcome', form_validator._errors)
@@ -128,8 +128,8 @@ class TestAdverseEventFormValidator(TestCase):
             or `resolved with sequelae` cleaned data validates or fails the
             tests if the Validation Error is raised unexpectedly.
         """
-        self.ae_options.update(status='ongoing', )
-        form_validator = AdverseEventFormValidator(
+        self.ae_options.update(status='ongoing',)
+        form_validator = AdverseEventRecordFormValidator(
             cleaned_data=self.ae_options)
         try:
             form_validator.validate()
@@ -143,7 +143,7 @@ class TestAdverseEventFormValidator(TestCase):
         self.ae_options.update(status='resolved',
                                stop_date=get_utcnow().date(),
                                outcome='resolved_with_sequelae')
-        form_validator = AdverseEventFormValidator(
+        form_validator = AdverseEventRecordFormValidator(
             cleaned_data=self.ae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('sequelae_specify', form_validator._errors)
@@ -157,7 +157,7 @@ class TestAdverseEventFormValidator(TestCase):
                                stop_date=get_utcnow().date(),
                                outcome='resolved_with_sequelae',
                                sequelae_specify='blah')
-        form_validator = AdverseEventFormValidator(
+        form_validator = AdverseEventRecordFormValidator(
             cleaned_data=self.ae_options)
         try:
             form_validator.validate()
@@ -168,7 +168,7 @@ class TestAdverseEventFormValidator(TestCase):
         """ Assert that if MAAE is `yes`, error is raised if MAAE is not specified.
         """
         self.ae_options.update(medically_attended_ae=YES)
-        form_validator = AdverseEventFormValidator(
+        form_validator = AdverseEventRecordFormValidator(
             cleaned_data=self.ae_options)
         self.assertRaises(ValidationError, form_validator.validate)
         self.assertIn('maae_specify', form_validator._errors)
@@ -179,7 +179,7 @@ class TestAdverseEventFormValidator(TestCase):
         """
         self.ae_options.update(medically_attended_ae=YES,
                                maae_specify='blah')
-        form_validator = AdverseEventFormValidator(
+        form_validator = AdverseEventRecordFormValidator(
             cleaned_data=self.ae_options)
         try:
             form_validator.validate()
