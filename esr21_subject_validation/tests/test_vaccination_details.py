@@ -133,4 +133,4 @@ class VaccinationDetailsFormValidatorTests(TestCase):
         form = VaccineDetailsFormValidator(cleaned_data=self.data)
 
         self.assertRaises(ValidationError, form.validate)
-        self.assertIn('next_vaccination_data', form._errors)
+        self.assertIn('next_vaccination_date', form._errors)

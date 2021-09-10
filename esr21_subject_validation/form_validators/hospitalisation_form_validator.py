@@ -24,4 +24,4 @@ class HospitalisationFormValidator(FormValidator):
         self.required_if('covid19_related_symptoms', field='reason',
                          field_required='covid_symptoms')
 
-        self.required_if_not_none(field='stop_date', field_required='hospitalisation_outcome')
+        # self.required_if_not_none(field='stop_date', field_required='hospitalisation_outcome')
