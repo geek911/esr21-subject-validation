@@ -3,7 +3,7 @@ from edc_constants.constants import OTHER
 from edc_form_validators import FormValidator
 
 
-class SeriousAdverseEventFormValidator(FormValidator):
+class SeriousAdverseEventRecordFormValidator(FormValidator):
 
     def clean(self):
         cleaned_data = self.cleaned_data

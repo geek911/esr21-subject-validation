@@ -23,7 +23,7 @@ class DemographicsDataFormValidator(FormValidator):
         """
         self.household_members = self.cleaned_data.get('household_members')
 
-        if self.household_members < 0:
+        if self.household_members and int(self.household_members) < 0:
             raise ValidationError('Number cannot be negative')
     
 

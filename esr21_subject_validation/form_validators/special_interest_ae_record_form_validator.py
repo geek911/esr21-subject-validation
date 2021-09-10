@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from edc_form_validators import FormValidator
 
 
-class SpecialInterestAdverseEventFormValidator(FormValidator):
+class SpecialInterestAERecordFormValidator(FormValidator):
 
     def clean(self):
         cleaned_data = self.cleaned_data
