@@ -28,7 +28,6 @@ class TestSeriousAdverseEventRecordFormValidator(TestCase):
             'date_aware_of': get_utcnow().date(),
             'seriousness_criteria': ListModel.objects.all(),
             'rationale': 'blah',
-            'event_abate': NO,
             'event_reappear': NO,
             'describe_sae_treatmnt': 'blahblah',
             'test_performed': 'a bunch of tests',
