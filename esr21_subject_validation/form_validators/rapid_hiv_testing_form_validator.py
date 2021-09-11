@@ -10,9 +10,27 @@ class RapidHivTestingFormValidator(FormValidator):
         self.required_if(
             YES,
             field='rapid_test_done',
-            field_required='result_date')
+            field_required='rapid_test_date')
 
         self.required_if(
             YES,
             field='rapid_test_done',
-            field_required='result')
+            field_required='rapid_test_result')
+
+        self.required_if(
+            YES,
+            field='prev_hiv_test',
+            field_required='hiv_result'
+        )
+
+        self.required_if(
+            YES,
+            field='prev_hiv_test',
+            field_required='hiv_test_date'
+        )
+
+        self.applicable_if(
+            YES,
+            field='prev_hiv_test',
+            field_applicable='evidence_hiv_status'
+        )
