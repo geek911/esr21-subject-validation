@@ -17,3 +17,4 @@ from .covid19_symptomatic_infections_form_validator import Covid19SymptomaticInf
 from .vital_signs_form_validator import VitalSignsFormValidator
 from .vaccination_details_form_validator import VaccineDetailsFormValidator
 from .subject_requisition_form_validator import SubjectRequisitionFormValidator
+from .screening_eligibility_form_validator import ScreeningEligibilityFormValidator
