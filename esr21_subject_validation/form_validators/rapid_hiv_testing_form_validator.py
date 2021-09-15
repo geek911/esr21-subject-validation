@@ -13,6 +13,18 @@ class RapidHivTestingFormValidator(FormValidator):
         rapid_test_date = self.cleaned_data.get('rapid_test_date')
         hiv_test_date = self.cleaned_data.get('hiv_test_date')
 
+
+        self.required_if(
+            YES,
+            field='hiv_testing_consent',
+            field_required='prev_hiv_test')
+        
+        self.applicable_if(
+            YES,
+            field='hiv_testing_consent',
+            field_applicable='rapid_test_done'
+        )
+        
         self.required_if(
             YES,
             field='rapid_test_done',
