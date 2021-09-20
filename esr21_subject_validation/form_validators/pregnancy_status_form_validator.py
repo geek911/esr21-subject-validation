@@ -1,6 +1,8 @@
+from django import forms
 from django.apps import apps as django_apps
 from edc_constants.constants import OTHER, YES, NO
 from edc_form_validators import FormValidator
+
 from .crf_form_validator import CRFFormValidator
 
 
@@ -31,7 +33,18 @@ class PregnancyStatusFormValidator(CRFFormValidator, FormValidator):
 
         self.validate_other_specify(field='post_menopausal')
 
-        self.required_if(NO,field='amenorrhea_history',field_required='start_date_menstrual_period')
-        
-        self.required_if(YES,field='amenorrhea_history',field_required='expected_delivery',inverse=False)
+        self.required_if(NO, field='amenorrhea_history',
+                        field_required='start_date_menstrual_period')
+
+        self.required_if(YES, field='amenorrhea_history', field_required='expected_delivery',
+                        inverse=False)
+
+        start_date_menstrual_period = self.cleaned_data.get('start_date_menstrual_period')
+        expected_delivery = self.cleaned_data.get('expected_delivery')
+
+        if start_date_menstrual_period == expected_delivery:
+            msg = 'Start date of menstrual period cannot be the same as date of'\
+                ' expected delivery'
+            raise forms.ValidationError(msg)
+
         super().clean()

@@ -13,12 +13,6 @@ from django.apps import apps as django_apps
 
 class MedicalHistoryFormValidator(CRFFormValidator, FormValidator):
 
-    medical_diagnosis = 'esr21_subject.medicaldiagnosis'
-
-    @property
-    def medical_diagnosis_cls(self):
-        return django_apps.get_model(self.medical_diagnosis)
-
     def clean(self):
         self.m2m_required_if(YES,
                             field='prior_covid_infection',
@@ -35,11 +29,4 @@ class MedicalHistoryFormValidator(CRFFormValidator, FormValidator):
         relevant_history = self.cleaned_data['relevant_history']
 
         super().clean()
-        
-        # if relevant_history == YES:
-        #     medical_diagnosis = self.medical_diagnosis_cls.objects.filter(medical_history=self.instance)
-        #     if medical_diagnosis.count() == 0:
-        #         msg = 'Subject have relevant medical history, '\
-        #         f'{self.medical_diagnosis_cls._meta.verbose_name} is required'
-        #         raise forms.ValidationError(msg)
         
