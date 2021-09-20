@@ -38,13 +38,7 @@ class RapidHivTestingFormValidator(FormValidator):
         self.applicable_if(
             YES,
             field='prev_hiv_test',
-            field_required='hiv_result'
-        )
-
-        self.applicable_if(
-            YES,
-            field='prev_hiv_test',
-            field_required='hiv_test_date'
+            field_applicable='hiv_result'
         )
 
         self.applicable_if(
