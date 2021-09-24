@@ -11,18 +11,12 @@ class PersonalContactInformationFormValidator(FormValidator):
             YES,
             field='may_visit_home',
             field_required='physical_address')
-        self.validate_may_call()
+        self.required_if(
+            YES,
+            field='may_call',
+            field_required='subject_cell')
         self.validate_may_call_work()
         self.validate_may_contact_indirectly()
-
-    def validate_may_call(self):
-        fields = ['subject_cell', 'subject_phone']
-
-        for field in fields:
-            self.required_if(
-                YES,
-                field='may_call',
-                field_required=field)
 
     def validate_may_call_work(self):
         fields = ['subject_work_place', 'subject_work_phone']
