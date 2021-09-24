@@ -13,29 +13,32 @@ class RapidHivTestingFormValidator(FormValidator):
         rapid_test_date = self.cleaned_data.get('rapid_test_date')
         hiv_test_date = self.cleaned_data.get('hiv_test_date')
 
-        self.required_if(
+        
+
+        self.applicable_if(
             YES,
             field='hiv_testing_consent',
-            field_required='prev_hiv_test')
+            field_applicable='prev_hiv_test',)
+        
+
+        self.not_required_if(
+            NO,
+            field='hiv_testing_consent',
+            field_required='rapid_test_done',
+            inverse=False
+        )
 
         self.required_if(
             YES,
-            field='evidence_hiv_status',
+            field='prev_hiv_test',
             field_required='hiv_test_date'
         )
 
-        if hiv_test_date and self.cleaned_data.get('hiv_result') is None:
-            raise ValidationError({
-                'hiv_result': 'Cannot be none'
-            })
-
-        hiv_result = self.cleaned_data.get('hiv_result') or None
-        rapid_test_done = self.cleaned_data.get('rapid_test_done')
-
-        if hiv_result and (hiv_result == NEG or hiv_result == IND) and rapid_test_done == NO:
-            raise ValidationError({
-                'rapid_test_done': 'Rapid test should be done'
-            })
+        self.required_if(
+            YES,
+            field='prev_hiv_test',
+            field_required='hiv_result'
+        )
 
         self.required_if(
             YES,
@@ -50,16 +53,19 @@ class RapidHivTestingFormValidator(FormValidator):
         self.applicable_if(
             YES,
             field='prev_hiv_test',
-            field_applicable='hiv_result'
-        )
-
-        self.applicable_if(
-            YES,
-            field='prev_hiv_test',
             field_applicable='evidence_hiv_status'
         )
 
+
+        self.not_required_if(
+            POS,
+            field='hiv_result',
+            field_required='rapid_test_done'
+        )
+
         subject_visit = self.cleaned_data.get('subject_visit')
+
+
 
         if hiv_test_date:
 
@@ -74,6 +80,13 @@ class RapidHivTestingFormValidator(FormValidator):
                                                   'previous hiv results are more than 3 months old.'}
                     raise ValidationError(message)
 
+        hiv_testing_consent = self.cleaned_data.get('hiv_testing_consent')
+        hiv_result = self.cleaned_data.get('hiv_result')
+
+        # if hiv_testing_consent == YES and hiv_result == NEG:
+        #     message = {'rapid_test_done': 'Rapid test must be performed if participant hiv results is negative .'}
+        #     raise ValidationError(message)
+        
         if rapid_test_date:
 
             date_diff = relativedelta(subject_visit.report_datetime.date(), rapid_test_date)
