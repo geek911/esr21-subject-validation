@@ -24,12 +24,6 @@ class RapidHivTestingFormValidator(FormValidator):
             field_required='hiv_test_date'
         )
 
-        self.applicable_if(
-            YES,
-            field='hiv_testing_consent',
-            field_applicable='rapid_test_done'
-        )
-
         if hiv_test_date and self.cleaned_data.get('hiv_result') is None:
             raise ValidationError({
                 'hiv_result': 'Cannot be none'
