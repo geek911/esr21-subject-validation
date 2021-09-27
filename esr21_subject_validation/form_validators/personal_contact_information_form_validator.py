@@ -1,4 +1,4 @@
-from edc_constants.choices import YES
+from edc_constants.choices import YES, NO
 from edc_form_validators import FormValidator
 
 
@@ -11,18 +11,20 @@ class PersonalContactInformationFormValidator(FormValidator):
             YES,
             field='may_visit_home',
             field_required='physical_address')
-        self.validate_may_call()
+
+        self.required_if(
+            YES,
+            field='may_call',
+            field_required='subject_cell')
+        self.not_required_if(
+            NO,
+            field='may_call',
+            field_required='subject_phone'
+        )
+
         self.validate_may_call_work()
+
         self.validate_may_contact_indirectly()
-
-    def validate_may_call(self):
-        fields = ['subject_cell', 'subject_phone']
-
-        for field in fields:
-            self.required_if(
-                YES,
-                field='may_call',
-                field_required=field)
 
     def validate_may_call_work(self):
         fields = ['subject_work_place', 'subject_work_phone']
@@ -37,7 +39,12 @@ class PersonalContactInformationFormValidator(FormValidator):
         fields = ['indirect_contact_name',
                   'indirect_contact_relation',
                   'indirect_contact_physical_address',
-                  'indirect_contact_cell', 'indirect_contact_phone']
+                  'indirect_contact_cell']
+
+        self.not_required_if(
+            NO,
+            field='may_contact_indirectly',
+            field_required='indirect_contact_phone')
 
         for field in fields:
             self.required_if(
