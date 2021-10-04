@@ -17,27 +17,22 @@ class PregnancyStatusFormValidator(CRFFormValidator, FormValidator):
     def clean(self):
 
         self.m2m_required_if(YES,
-                            field='contraceptive_usage',
-                            m2m_field='contraceptive')
+                             field='contraceptive_usage',
+                             m2m_field='contraceptive')
 
         spontaneous_miscarriages = self.cleaned_data.get('number_miscarriages') or 0
 
         self.required_if_true(spontaneous_miscarriages > 0,
-                            field_required='date_miscarriages',)
-
-        self.validate_other_specify(field='contraceptive')
+                              field_required='date_miscarriages',)
 
         self.m2m_other_specify(OTHER,
-                            m2m_field='contraceptive',
-                            field_other='contraceptive_other',)
+                               m2m_field='contraceptive',
+                               field_other='contraceptive_other',)
 
         self.validate_other_specify(field='post_menopausal')
 
         self.required_if(NO, field='amenorrhea_history',
-                        field_required='start_date_menstrual_period')
-
-        self.required_if(YES, field='amenorrhea_history', field_required='expected_delivery',
-                        inverse=False)
+                         field_required='start_date_menstrual_period')
 
         start_date_menstrual_period = self.cleaned_data.get('start_date_menstrual_period')
         expected_delivery = self.cleaned_data.get('expected_delivery')
