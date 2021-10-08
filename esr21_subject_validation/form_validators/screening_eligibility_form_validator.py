@@ -1,8 +1,7 @@
 
-
 from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
-from edc_constants.constants import YES
+from edc_constants.constants import YES, OTHER
 from edc_form_validators import FormValidator
 
 
@@ -17,7 +16,14 @@ class ScreeningEligibilityFormValidator(FormValidator):
     def clean(self):
 
         report_datetime = self.cleaned_data.get('report_datetime')
-        if (report_datetime and self.edc_protocol.study_open_datetime > report_datetime):
+        self.validate_other_specify(field='symptomatic_infections')
+
+        self.m2m_other_specify(OTHER,
+                               m2m_field='symptomatic_infections',
+                               field_other='symptomatic_infections_other', )
+
+
+        if report_datetime and self.edc_protocol.study_open_datetime > report_datetime:
             message = {
                 'report_datetime': ('Date cannot be before study starts. Study opened on'
                                     f' {self.edc_protocol.study_open_datetime.date()}.')}
