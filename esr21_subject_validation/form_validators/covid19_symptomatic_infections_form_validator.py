@@ -15,10 +15,6 @@ class Covid19SymptomaticInfectionsFormValidator(FormValidator):
             field='visits',
             field_required='hospitalisation_date')
 
-        self.m2m_required_if(YES,
-                             field='symptomatic_infections_experiences',
-                             m2m_field='symptomatic_infections')
-
         self.m2m_other_specify(OTHER,
                                m2m_field='symptomatic_infections',
                                field_other='symptomatic_infections_other', )
