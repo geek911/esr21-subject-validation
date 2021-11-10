@@ -1,13 +1,14 @@
+from dateutil.relativedelta import relativedelta
 from django.core.exceptions import ValidationError
-from django.test import TestCase
+from django.test import TestCase, tag
 from edc_base.utils import get_utcnow
 from edc_constants.constants import NO, OTHER, YES
 
 from ..form_validators import PregnancyStatusFormValidator
 from .models import Appointment, SubjectVisit, InformedConsent, ListModel
-from dateutil.relativedelta import relativedelta
 
 
+@tag('psf')
 class TestPregnancyStatusForm(TestCase):
 
     def setUp(self):

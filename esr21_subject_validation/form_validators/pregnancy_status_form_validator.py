@@ -37,9 +37,10 @@ class PregnancyStatusFormValidator(CRFFormValidator, FormValidator):
         start_date_menstrual_period = self.cleaned_data.get('start_date_menstrual_period')
         expected_delivery = self.cleaned_data.get('expected_delivery')
 
-        if start_date_menstrual_period == expected_delivery:
-            msg = 'Start date of menstrual period cannot be the same as date of'\
-                ' expected delivery'
-            raise forms.ValidationError(msg)
+        if start_date_menstrual_period and expected_delivery:
+            if start_date_menstrual_period == expected_delivery:
+                msg = 'Start date of menstrual period cannot be the same as date of'\
+                    ' expected delivery'
+                raise forms.ValidationError(msg)
 
         super().clean()
